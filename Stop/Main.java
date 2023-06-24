@@ -14,7 +14,7 @@ public class Main {
     private static final int FACIL = 240; // modo facil
     private static final int MEDIO = 150; // modo medio
     private static final int DIFICIL = 100; // modo dificil
-    private static final int HARDCORE = 60; // modo muito dificil
+
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -119,11 +119,10 @@ public class Main {
             timeLimit = FACIL;
         } else if (numcat <= 4) {
             timeLimit = MEDIO;
-        } else if (numcat <= 8) {
+        } else  {
             timeLimit = DIFICIL;
-        } else {
-            timeLimit = HARDCORE;
         }
+        	
         return timeLimit;
     }
 }
