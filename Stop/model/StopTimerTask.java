@@ -1,14 +1,19 @@
 package Stop.model;
 
+import java.util.Timer;
 import java.util.TimerTask;
+
+import Stop.model.Jogador;
 
 public class StopTimerTask extends TimerTask {
     private int timeLimit;
     private Jogador jogador;
+    private Timer timer;
 
-    public StopTimerTask(int timeLimit, Jogador jogador) {
+    public StopTimerTask(int timeLimit, Jogador jogador, Timer timer) {
         this.timeLimit = timeLimit;
         this.jogador = jogador;
+        this.timer = timer;
     }
 
     @Override
@@ -23,7 +28,7 @@ public class StopTimerTask extends TimerTask {
             jogador.setTempo(timeLimit);
         } else {
             System.out.println("Tempo esgotado!");
-            cancel();
+            timer.cancel();
             System.exit(0);
         }
     }
