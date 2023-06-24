@@ -11,10 +11,10 @@ import Stop.model.Categoria;
 import Stop.model.StopTimerTask;
 
 public class Main {
-    private static final int Facil = 240; // modo facil
-    private static final int Medio = 150; // modo medio
-    private static final int Dificil = 100; // modo dificil
-    private static final int Hardcore = 60; // modo muito dificil
+    private static final int FACIL = 240; // modo facil
+    private static final int MEDIO = 150; // modo medio
+    private static final int DIFICIL = 100; // modo dificil
+    private static final int HARDCORE = 60; // modo muito dificil
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -23,7 +23,7 @@ public class Main {
         System.out.println();
         Jogador jogador1 = cadastrarJogador(scanner);
 
-        System.out.print("Informe o número de categorias para o stop: ");
+        System.out.print("Informe o nÃºmero de categorias para o stop: ");
         int numcat = scanner.nextInt();
         scanner.nextLine();
 
@@ -36,33 +36,12 @@ public class Main {
 
         Random random = new Random();
         char letra = (char) (random.nextInt(26) + 'A');
-        System.out.println("O stop é: " + letra);
+        System.out.println("O stop Ã©: " + letra);
 
         String[] respostas = new String[numcat];
         Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            int timeLimit = getTimeLimit(numcat);
-
-            @Override
-            public void run() { // comando do tempo
-                if (timeLimit > 0) {
-                    timeLimit = timeLimit - 1;
-
-                    if (timeLimit % 15 == 0) {
-                        System.out.println("\nTempo restante: " + timeLimit + " segundos");
-
-                    }
-
-                    jogador1.setTempo(timeLimit);
-                } else {
-                    System.out.println("Tempo esgotado!");
-                    timer.cancel();
-                    scanner.close();
-                    System.exit(0);
-                }
-            }
-
-        };
+        int timeLimit = getTimeLimit(numcat);
+        StopTimerTask task = new StopTimerTask(timeLimit, jogador1, timer);
 
         timer.scheduleAtFixedRate(task, 1000, 1000);
 
@@ -73,44 +52,24 @@ public class Main {
         }
         timer.cancel();
 
-        System.out.println("Stoppp, Parabens você ganhou, chegou no pódio");
-        System.out.print("Tem mais um jogador para jogar? 1- Sim 2- Não\n");
+        System.out.println("Stoppp, Parabens vocÃª ganhou, chegou no pÃ³dio");
+        System.out.print("Tem mais um jogador para jogar? 1- Sim 2- NÃ£o\n");
         int x = scanner.nextInt();
 
         if (x == 1) {
-            scanner.nextLine(); // inicio para o jogador 2
-            System.out.println("informe a confimação:");
+            scanner.nextLine(); // inÃ­cio para o jogador 2
+            System.out.println("informe a confimaÃ§Ã£o:");
 
             System.out.println("Vamos cadastrar o segundo jogador");
             System.out.println();
             Jogador jogador2 = cadastrarJogador(scanner);
 
-            System.out.println("O stop é: " + letra);
-            System.out.println("Não pode usar as mesmas respostas do primeiro jogador");
+            System.out.println("O stop Ã©: " + letra);
+            System.out.println("NÃ£o pode usar as mesmas respostas do primeiro jogador");
             String[] respostas2 = new String[numcat];
             Timer timer2 = new Timer();
-            TimerTask task2 = new TimerTask() {
-                int timeLimit2 = getTimeLimit(numcat);
-
-                @Override
-                public void run() { // tempo
-                    if (timeLimit2 > 0) {
-
-                        timeLimit2 = timeLimit2 - 1;
-
-                        if (timeLimit2 % 15 == 0) {
-                            System.out.println("\nTempo restante: " + timeLimit2 + " segundos");
-
-                        }
-                        jogador2.setTempo(timeLimit2);
-                    } else {
-                        System.out.println("Tempo esgotado!");
-                        timer.cancel();
-                        scanner.close();
-                        System.exit(0);
-                    }
-                }
-            };
+            int timeLimit2 = getTimeLimit(numcat);
+            StopTimerTask task2 = new StopTimerTask(timeLimit2, jogador2, timer2);
 
             timer2.scheduleAtFixedRate(task2, 1000, 1000);
 
@@ -122,7 +81,7 @@ public class Main {
 
             timer2.cancel();
 
-            System.out.println("Stoppp, Parabens vocês terminaram!");
+            System.out.println("Stoppp, Parabens vocÃªs terminaram!");
 
             if (jogador1.getTempo() > jogador2.getTempo()) {
                 System.out.println("O jogador " + jogador1.getNome() + "! Venceu com o melhor tempo!");
@@ -138,7 +97,7 @@ public class Main {
         scanner.close();
     }
 
-    private static Jogador cadastrarJogador(Scanner scanner) { // class jogador
+    private static Jogador cadastrarJogador(Scanner scanner) { // classe jogador
         System.out.println("Informe o Nome do jogador: ");
         String nome = scanner.nextLine();
 
@@ -152,21 +111,19 @@ public class Main {
         String sexo = scanner.nextLine();
         int tempo = 0;
         return new JogadorMult(nome, apelido, nascimento, sexo, tempo);
-
     }
 
     private static int getTimeLimit(int numcat) { // modo da dificuldade
         int timeLimit;
         if (numcat <= 2) {
-            timeLimit = Facil;
+            timeLimit = FACIL;
         } else if (numcat <= 4) {
-            timeLimit = Medio;
+            timeLimit = MEDIO;
         } else if (numcat <= 8) {
-            timeLimit = Dificil;
+            timeLimit = DIFICIL;
         } else {
-            timeLimit = Hardcore;
+            timeLimit = HARDCORE;
         }
-
         return timeLimit;
     }
 }
